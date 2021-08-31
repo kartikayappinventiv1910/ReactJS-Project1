@@ -1,102 +1,41 @@
-import React from "react";
-import quizData from "./data";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-function Quiz() {
-  console.log(quizData, "quizdata");
-  
-  // let currentQuiz = 0;
-  // let score = 0;
+import StartQuiz from "./initialScreen";
+import Questions from "./quizQuestion";
+import { data } from "./data";
+import EndScreen from "./quizEnd";
 
-  // loadQuiz();
-
-  // function loadQuiz() {
-  //   deselectAnswers();
-
-  //   const currentQuizData = quizData[currentQuiz];
-
-  //   questionEl.innerText = currentQuizData.question;
-  //   a_text.innerText = currentQuizData.a;
-  //   b_text.innerText = currentQuizData.b;
-  //   c_text.innerText = currentQuizData.c;
-  //   d_text.innerText = currentQuizData.d;
-  // }
-
-  // function getSelected() {
-  //   let answer = undefined;
-
-  //   answerEls.forEach((answerEl) => {
-  //     if (answerEl.checked) {
-  //       answer = answerEl.id;
-  //     }
-  //   });
-
-  //   return answer;
-  // }
-
-  // function deselectAnswers() {
-  //   answerEls.forEach((answerEl) => {
-  //     answerEl.checked = false;
-  //   });
-  // }
-
-  // submitBtn.addEventListener("click", () => {
-  //   // check to see the answer
-  //   const answer = getSelected();
-
-  //   if (answer) {
-  //     if (answer === quizData[currentQuiz].correct) {
-  //       score++;
-  //     }
-
-  //     currentQuiz++;
-  //     if (currentQuiz < quizData.length) {
-  //       loadQuiz();
-  //     } else {
-  //       quiz.innerHTML = `
-  //               <h2>You answered correctly at ${score}/${quizData.length} questions.</h2>
-                
-  //               <button onclick="location.reload()">Reload</button>
-  //           `;
-  //     }
-  //   }
-  // });
+export default function Quiz() {
+  const [currentQues, setCurrentQues] = useState(0);
+  const [answers, setAnswers] = useState([]);
 
   return (
-    <div>
-      <div class="quiz-container" id="quiz">
-        <div class="quiz-header">
-          <h2 id="question">Question text</h2>
-          <ul>
-            <li>
-              <input type="radio" id="a" name="answer" class="answer" />
-              <label id="a_text" for="a">
-                Question
-              </label>
-            </li>
-            <li>
-              <input type="radio" id="b" name="answer" class="answer" />
-              <label id="b_text" for="b">
-                Question
-              </label>
-            </li>
-            <li>
-              <input type="radio" id="c" name="answer" class="answer" />
-              <label id="c_text" for="c">
-                Question
-              </label>
-            </li>
-            <li>
-              <input type="radio" id="d" name="answer" class="answer" />
-              <label id="d_text" for="d">
-                Question
-              </label>
-            </li>
-          </ul>
-        </div>
-        <button>Submit</button>
-      </div>
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/" exact>
+          <StartQuiz />
+        </Route>
+
+        <Route path="/question" exact>
+          <Questions
+            data={data[currentQues]}
+            numOfQuestions={data.length}
+            currentQues={currentQues}
+            setCurrentQues={setCurrentQues}
+            setAnswers={setAnswers}
+          />
+        </Route>
+
+        <Route path="/quizfinish" exact>
+          <EndScreen
+            result={answers}
+            setAnswers={setAnswers}
+            data={data}
+            setCurrentQues={setCurrentQues}
+          />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
-
-export default Quiz;
